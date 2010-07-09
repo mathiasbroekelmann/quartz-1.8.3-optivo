@@ -21,20 +21,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.quartz.Calendar;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.JobListener;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerContext;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerListener;
-import org.quartz.SchedulerMetaData;
-import org.quartz.Trigger;
-import org.quartz.TriggerListener;
-import org.quartz.UnableToInterruptJobException;
+import org.quartz.*;
 import org.quartz.core.QuartzScheduler;
 import org.quartz.core.SchedulingContext;
+import org.quartz.impl.jdbcjobstore.FiredTriggerRecord;
 import org.quartz.spi.JobFactory;
 
 /**
@@ -50,7 +40,7 @@ import org.quartz.spi.JobFactory;
  * 
  * @author James House
  */
-public class StdScheduler implements Scheduler {
+public class StdScheduler implements ExtendedScheduler {
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -549,6 +539,10 @@ public class StdScheduler implements Scheduler {
     public Trigger getTrigger(String triggerName, String triggerGroup)
         throws SchedulerException {
         return sched.getTrigger(schedCtxt, triggerName, triggerGroup);
+    }
+
+    public List<FiredTriggerRecord> getFiredTriggers(String jobName, String jobGroup) throws SchedulerException {
+        return sched.getFiredTriggers(schedCtxt, jobName, jobGroup);
     }
 
     /**

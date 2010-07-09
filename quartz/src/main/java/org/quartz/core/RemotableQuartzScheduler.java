@@ -34,6 +34,7 @@ import org.quartz.SchedulerListener;
 import org.quartz.Trigger;
 import org.quartz.TriggerListener;
 import org.quartz.UnableToInterruptJobException;
+import org.quartz.impl.jdbcjobstore.FiredTriggerRecord;
 
 /**
  * @author James House
@@ -167,6 +168,8 @@ public interface RemotableQuartzScheduler extends Remote {
 
     Trigger getTrigger(SchedulingContext ctxt, String triggerName,
             String triggerGroup) throws SchedulerException, RemoteException;
+
+    List<FiredTriggerRecord> getFiredTriggers(SchedulingContext ctxt, String jobName, String jobGroup) throws SchedulerException;
 
     int getTriggerState(SchedulingContext ctxt, String triggerName,
             String triggerGroup) throws SchedulerException, RemoteException;

@@ -17,6 +17,7 @@
 
 package org.quartz.spi;
 
+import java.util.List;
 import java.util.Set;
 
 import org.quartz.Calendar;
@@ -27,6 +28,7 @@ import org.quartz.SchedulerConfigException;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.core.SchedulingContext;
+import org.quartz.impl.jdbcjobstore.FiredTriggerRecord;
 
 /**
  * <p>
@@ -261,6 +263,21 @@ public interface JobStore {
      *         match.
      */
     Trigger retrieveTrigger(SchedulingContext ctxt, String triggerName,
+            String groupName) throws JobPersistenceException;
+
+    /**
+     * <p>
+     * Retrieve the given <code>{@link org.quartz.Trigger}</code>.
+     * </p>
+     *
+     * @param jobName
+     *          The name of the <code>Trigger</code> to be retrieved.
+     * @param groupName
+     *          The group name of the <code>Trigger</code> to be retrieved.
+     * @return The desired <code>Trigger</code>, or null if there is no
+     *         match.
+     */
+    List<FiredTriggerRecord> retrieveFiredTriggersByJob(SchedulingContext ctxt, String jobName,
             String groupName) throws JobPersistenceException;
 
     /**

@@ -1,0 +1,7 @@
+NEW FEATURES AND FIXES
+
+  2010-06-18 Applied our suggested fix for a regression in 1.8.1, see https://jira.terracotta.org/jira/browse/QTZ-48
+  2010-06-18 log "note: volatile triggers are effectively non-volatile in a clustered environment"
+             to debug instead of info
+  2010-06-11 new method QuartzScheduler.getFiredTriggers()
+

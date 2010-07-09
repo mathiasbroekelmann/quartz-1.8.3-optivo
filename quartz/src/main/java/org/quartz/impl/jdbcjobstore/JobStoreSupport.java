@@ -1164,8 +1164,9 @@ public abstract class JobStoreSupport implements JobStore, Constants {
             boolean forceState, boolean recovering)
         throws ObjectAlreadyExistsException, JobPersistenceException {
         if (newTrigger.isVolatile() && isClustered()) {
-            getLog().info(
-                "note: volatile triggers are effectively non-volatile in a clustered environment.");
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("note: volatile triggers are effectively non-volatile in a clustered environment.");
+            }
         }
 
         boolean existingTrigger = triggerExists(conn, newTrigger.getName(),
@@ -2246,6 +2247,27 @@ public abstract class JobStoreSupport implements JobStore, Constants {
                     + e.getMessage(), e);
         }
 
+    }
+
+    public List<FiredTriggerRecord> retrieveFiredTriggersByJob(SchedulingContext ctxt, final String jobName, final String groupName) throws JobPersistenceException {
+        final Object result = executeWithoutLock(
+            new JobStoreSupport.TransactionCallback() {
+                public Object execute(Connection conn) throws JobPersistenceException {
+                    try {
+                        return getDelegate().selectFiredTriggerRecordsByJob(conn, jobName, groupName);
+                    } catch (SQLException e) {
+                        throw new JobPersistenceException(
+                            "Couldn't determine fired triggers for job '"
+                                + jobName + "."
+                                + groupName + "': "
+                                + e.getMessage(), e
+                        );
+                    }
+                }
+            }
+        );
+        //noinspection unchecked
+        return (List<FiredTriggerRecord>) result;
     }
 
     /*
@@ -3793,7 +3815,7 @@ public abstract class JobStoreSupport implements JobStore, Constants {
 
     class ClusterManager extends Thread {
 
-        private boolean shutdown = false;
+        private volatile boolean shutdown = false;
 
         private int numFails = 0;
         
@@ -3810,7 +3832,16 @@ public abstract class JobStoreSupport implements JobStore, Constants {
 
         public void shutdown() {
             shutdown = true;
-            this.interrupt();
+            // Wait until ClusterManager has really shut down ...
+            do {
+                this.interrupt();
+                try {
+                    this.join(25);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Got interrupted while shuting down.", e);
+                }
+            } while (this.isAlive());
         }
 
         private boolean manage() {
@@ -3869,7 +3900,7 @@ public abstract class JobStoreSupport implements JobStore, Constants {
 
     class MisfireHandler extends Thread {
 
-        private boolean shutdown = false;
+        private volatile boolean shutdown = false;
 
         private int numFails = 0;
         
@@ -3886,7 +3917,16 @@ public abstract class JobStoreSupport implements JobStore, Constants {
 
         public void shutdown() {
             shutdown = true;
-            this.interrupt();
+            // Wait until MisfireHandler has really shut down ...
+            do {
+                this.interrupt();
+                try {
+                    this.join(25);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Got interrupted while shuting down.", e);
+                }
+            } while (this.isAlive());
         }
 
         private RecoverMisfiredJobsResult manage() {

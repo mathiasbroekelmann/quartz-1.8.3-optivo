@@ -17,16 +17,10 @@
 
 package org.quartz.simpl;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.quartz.impl.jdbcjobstore.FiredTriggerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.quartz.Calendar;
@@ -508,6 +502,10 @@ public class RAMJobStore implements JobStore {
     
             return (tw != null) ? (Trigger)tw.getTrigger().clone() : null;
         }
+    }
+
+    public List<FiredTriggerRecord> retrieveFiredTriggersByJob(SchedulingContext ctxt, String jobName, String groupName) throws JobPersistenceException {
+        throw new RuntimeException("method is not implemented");
     }
 
     /**

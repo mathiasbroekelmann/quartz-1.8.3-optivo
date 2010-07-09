@@ -59,6 +59,7 @@ import org.quartz.TriggerListener;
 import org.quartz.UnableToInterruptJobException;
 import org.quartz.core.jmx.QuartzSchedulerMBean;
 import org.quartz.impl.SchedulerRepository;
+import org.quartz.impl.jdbcjobstore.FiredTriggerRecord;
 import org.quartz.listeners.SchedulerListenerSupport;
 import org.quartz.simpl.SimpleJobFactory;
 import org.quartz.spi.JobFactory;
@@ -254,6 +255,22 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
+
+    /**
+     * <p>
+     * Get the <code>{@link Trigger}</code> instance with the given name and
+     * group.
+     * </p>
+     */
+    public List<FiredTriggerRecord> getFiredTriggers(SchedulingContext ctxt, String jobName, String jobGroup) throws SchedulerException {
+        validateState();
+
+        if(jobGroup == null) {
+            jobGroup = Scheduler.DEFAULT_GROUP;
+        }
+
+        return resources.getJobStore().retrieveFiredTriggersByJob(ctxt, jobName, jobGroup);
+    }
 
     public String getVersion() {
         return getVersionMajor() + "." + getVersionMinor() + "."

@@ -18,9 +18,11 @@
 package org.quartz.impl.jdbcjobstore;
 
 import java.sql.Connection;
+import java.util.List;
 
 import org.quartz.JobPersistenceException;
 import org.quartz.SchedulerConfigException;
+import org.quartz.core.SchedulingContext;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.SchedulerSignaler;
 

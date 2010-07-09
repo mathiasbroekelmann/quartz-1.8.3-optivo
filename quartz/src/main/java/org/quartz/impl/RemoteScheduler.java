@@ -24,20 +24,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.quartz.Calendar;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.JobListener;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerContext;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerListener;
-import org.quartz.SchedulerMetaData;
-import org.quartz.Trigger;
-import org.quartz.TriggerListener;
-import org.quartz.UnableToInterruptJobException;
+import org.quartz.*;
 import org.quartz.core.RemotableQuartzScheduler;
 import org.quartz.core.SchedulingContext;
+import org.quartz.impl.jdbcjobstore.FiredTriggerRecord;
 import org.quartz.spi.JobFactory;
 
 /**
@@ -53,7 +43,7 @@ import org.quartz.spi.JobFactory;
  * 
  * @author James House
  */
-public class RemoteScheduler implements Scheduler {
+public class RemoteScheduler implements ExtendedScheduler {
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -798,6 +788,11 @@ public class RemoteScheduler implements Scheduler {
             throw invalidateHandleCreateException(
                     "Error communicating with remote scheduler.", re);
         }
+    }
+
+    public List<FiredTriggerRecord> getFiredTriggers(String jobName, String jobGroup) throws SchedulerException {
+            return getRemoteScheduler().getFiredTriggers(schedCtxt, jobName,
+                    jobGroup);
     }
 
     /**
