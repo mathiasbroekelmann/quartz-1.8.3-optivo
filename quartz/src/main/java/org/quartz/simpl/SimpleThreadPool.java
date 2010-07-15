@@ -240,10 +240,10 @@ public class SimpleThreadPool implements ThreadPool {
         if(workers != null && workers.size() > 0) // already initialized...
             return;
         
-        if (count <= 0) {
+        /*if (count <= 0) {
             throw new SchedulerConfigException(
                     "Thread count must be > 0");
-        }
+        }*/
         if (prio <= 0 || prio > 9) {
             throw new SchedulerConfigException(
                     "Thread priority must be > 0 and <= 9");
