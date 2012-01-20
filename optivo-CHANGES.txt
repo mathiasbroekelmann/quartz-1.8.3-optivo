@@ -5,4 +5,5 @@ NEW FEATURES AND FIXES
   2010-06-18 log "note: volatile triggers are effectively non-volatile in a clustered environment"
              to debug instead of info
   2010-06-11 new method QuartzScheduler.getFiredTriggers()
+  2012-01-20 Integrated Subversion commit #1272 -- fix for QTZ-59: Jobs that start just around scheduler shutdown time can get stuck in retry loop
 

@@ -409,7 +409,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
     public boolean completeTriggerRetryLoop(Trigger trigger,
             JobDetail jobDetail, int instCode) {
         long count = 0;
-        while (!shutdownRequested) {
+        while (!shutdownRequested && !qs.isShuttingDown()) {
             try {
                 Thread.sleep(15 * 1000L); // retry every 15 seconds (the db
                 // connection must be failed)

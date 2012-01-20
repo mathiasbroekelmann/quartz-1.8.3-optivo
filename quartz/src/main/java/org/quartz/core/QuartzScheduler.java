@@ -163,8 +163,8 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
 
     private boolean signalOnSchedulingChange = true;
 
-    private boolean closed = false;
-    private boolean shuttingDown = false;
+    private volatile boolean closed = false;
+    private volatile boolean shuttingDown = false;
     private boolean boundRemotely = false;
 
     private QuartzSchedulerMBean jmxBean = null;
@@ -631,13 +631,13 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
                 "Scheduler " + resources.getUniqueIdentifier()
                         + " shutting down.");
         
-        notifySchedulerListenersShuttingdown();
-        
         standby();
 
         schedThread.halt();
-        
-        if( (resources.isInterruptJobsOnShutdown() && !waitForJobsToComplete) || 
+
+        notifySchedulerListenersShuttingdown();
+
+        if( (resources.isInterruptJobsOnShutdown() && !waitForJobsToComplete) ||
                 (resources.isInterruptJobsOnShutdownWithWait() && waitForJobsToComplete)) {
             List<JobExecutionContext> jobs = getCurrentlyExecutingJobs();
             for(JobExecutionContext job: jobs) {
@@ -709,6 +709,10 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      */
     public boolean isShutdown() {
         return closed;
+    }
+
+    public boolean isShuttingDown() {
+        return shuttingDown;
     }
 
     public boolean isStarted() {
