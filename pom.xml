@@ -17,9 +17,9 @@
   <url>http://quartz-scheduler.org/</url>
 
   <scm>
-    <connection>scm:svn:http://svn.terracotta.org/svn/quartz</connection>
-    <developerConnection>scm:svn:https://svn.terracotta.org/repo/quartz</developerConnection>
-    <url>http://svn.terracotta.org/svn/quartz</url>
+    <connection>scm:git:https://optivo@github.com/optivo/quartz-1.8.3-optivo.git</connection>
+    <developerConnection>scm:git:https://optivo@github.com/optivo/quartz-1.8.3-optivo.git</developerConnection>
+    <url>https://github.com/optivo/quartz-1.8.3-optivo</url>
   </scm>
 
   <developers>
@@ -236,16 +236,14 @@
   </profiles>
 
   <distributionManagement>
-    <snapshotRepository>
-      <id>quartz-snapshots</id>
-      <name>Quartz snapshots at Sonatype Nexus</name>
-      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
     <repository>
-      <id>quartz-staging</id>
-      <name>Quartz release staging at Sonatype Nexus</name>
-      <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <id>optivo-releases</id>
+      <url>https://nexus.optivo.intern/content/repositories/releases</url>
     </repository>
+    <snapshotRepository>
+      <id>optivo-snapshots</id>
+      <url>https://nexus.optivo.intern/content/repositories/snapshots</url>
+    </snapshotRepository>
   </distributionManagement>
 
 </project>
